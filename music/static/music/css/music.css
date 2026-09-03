@@ -680,6 +680,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .bg-highlight {
   background-color: rgba(56, 189, 248, 0.17);
+  pointer-events: none;
 }
 
 .bg-sky-400\/10 {
