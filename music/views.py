@@ -5,9 +5,14 @@ from django.shortcuts import render
 from django.shortcuts import render
 from .models import Music
 
+from django.shortcuts import render
+from .models import Music
+
+
 def music(request):
-    song = Music.objects.first()
+    songs = Music.objects.all()
 
     return render(request, "music/music.html", {
-        "song": song
+        "songs": songs,
+        "song": songs.first(),
     })
