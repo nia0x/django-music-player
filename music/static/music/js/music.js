@@ -548,11 +548,12 @@ audio.addEventListener("timeupdate", function () {
 
 });
 
-
 progress.addEventListener("input", function () {
+    audio.currentTime = Number(this.value);
+});
 
-    audio.currentTime = progress.value;
-
+progress.addEventListener("change", function () {
+    audio.currentTime = Number(this.value);
 });
 
 

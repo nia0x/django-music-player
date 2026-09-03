@@ -1139,3 +1139,9 @@ div.amplitude-repeat-song.amplitude-repeat-song-on svg path{
         padding-right: 8px;
     }
 }
+
+
+  #song-percentage-played {
+    touch-action: none;
+    cursor: pointer;
+}
