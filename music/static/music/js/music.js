@@ -127,7 +127,7 @@ previous.addEventListener("click", function () {
 // Progress
 // -------------------------
 
-audio.addEventListener("loadedmetadata", function () {
+audio.addEventListener("loadedmetadata", function() {
 
     progress.max = audio.duration;
 
@@ -136,17 +136,22 @@ audio.addEventListener("loadedmetadata", function () {
 });
 
 
-audio.addEventListener("timeupdate", function () {
+audio.addEventListener("timeupdate", function() {
 
     progress.value = audio.currentTime;
 
-    currentTime.textContent = formatTime(audio.currentTime);
+    currentTime.textContent =
+        formatTime(audio.currentTime);
 
 });
 
-progress.addEventListener("input", function () {
+
+progress.addEventListener("input", function() {
+
     audio.currentTime = progress.value;
+
 });
+
 
 
 // -------------------------
