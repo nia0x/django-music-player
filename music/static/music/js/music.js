@@ -130,11 +130,11 @@ previous.addEventListener("click", function () {
 audio.addEventListener("loadedmetadata", function () {
 
     progress.max = audio.duration;
-    progress.value = audio.currentTime;
 
     duration.textContent = formatTime(audio.duration);
 
 });
+
 
 audio.addEventListener("timeupdate", function () {
 
@@ -145,14 +145,10 @@ audio.addEventListener("timeupdate", function () {
 });
 
 progress.addEventListener("input", function () {
-
-    const time = Number(this.value);
-
-    if (!isNaN(time) && isFinite(time)) {
-        audio.currentTime = time;
-    }
-
+    audio.currentTime = progress.value;
 });
+
+
 // -------------------------
 // وقتی آهنگ تمام شد
 // -------------------------
