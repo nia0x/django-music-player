@@ -1,0 +1,809 @@
+
+
+
+
+{% comment %} 
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Music Player</title>
+
+    <link rel="stylesheet" href="{% static 'music/css/music.css' %}">
+</head>
+
+<body>
+
+<div class="absolute right-4 top-4">
+    <div id="dark-mode-toggle" class="cursor-pointer">
+
+        <!-- Sun -->
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 stroke-white hidden dark:block"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+        </svg>
+
+        <!-- Moon -->
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 stroke-[#0A1122] block dark:hidden"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            />
+        </svg>
+
+    </div>
+</div>
+
+
+<div class="bg-[#F8FAFC] dark:bg-[#0A1122] w-screen h-screen flex flex-col items-center justify-center">
+
+    <div class="relative w-player flex flex-col rounded-xl shadow-player-light bg-player-light-background border border-player-light-border dark:shadow-player-dark dark:bg-player-dark-background dark:border-player-dark-border dark:backdrop-blur-xl">
+
+        <!-- SONG INFO -->
+        <div class="px-10 pt-10 pb-4 flex items-center z-50">
+
+            <img
+                id="song-cover"
+                src="/media/music/cover.jpg"
+                class="w-24 h-24 rounded-md mr-6 border border-bg-player-light-background dark:border-cover-dark-border"
+                alt="Album Cover"
+            >
+
+            <div class="flex flex-col">
+
+                <span
+    				id="song-name"
+    				class="font-sans text-lg font-medium leading-7 text-slate-900 dark:text-white"
+			>
+    				{{ song.title }}
+				</span>
+
+				<span
+    				id="song-artist"
+    				class="font-sans text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
+			>
+    				{{ song.artist }}
+				</span>
+                
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+        <div class="w-full flex flex-col px-10 pb-6 z-50">
+
+            <input
+                type="range"
+                id="song-percentage-played"
+                class="amplitude-song-slider mb-3"
+                min="0"
+                max="100"
+                value="0"
+                step="0.1"
+            >
+
+            <div class="flex w-full justify-between">
+
+                <span
+                    id="current-time"
+                    class="amplitude-current-time text-xs font-sans tracking-wide font-medium text-sky-500 dark:text-sky-300"
+                >
+                    0:00
+                </span>
+
+                <span
+                    id="duration"
+                    class="amplitude-duration-time text-xs font-sans tracking-wide font-medium text-gray-500"
+                >
+                    0:00
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+        <div class="h-control-panel px-10 rounded-b-xl bg-control-panel-light-background border-t border-gray-200 flex items-center justify-between z-50 dark:bg-control-panel-dark-background dark:border-gray-900">
+
+
+            <!-- FAVORITE -->
+            <div
+                class="cursor-pointer"
+                id="song-saved"
+                title="Favorite"
+            >
+
+                <svg
+                    width="26"
+                    height="24"
+                    viewBox="0 0 26 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M25 7C25 3.68629 22.2018 1 18.75 1C16.1692 1 13.9537 2.5017 13 4.64456C12.0463 2.5017 9.83082 1 7.25 1C3.79822 1 1 3.68629 1 7C1 14.6072 8.49219 20.1822 11.6365 22.187C12.4766 22.7226 13.5234 22.7226 14.3635 22.187C17.5078 20.1822 25 14.6072 25 7Z"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+
+            </div>
+
+
+            <!-- SHUFFLE -->
+            <div
+                class="cursor-pointer"
+                id="shuffle"
+                title="Shuffle"
+            >
+
+                <svg
+                    width="28"
+                    height="26"
+                    viewBox="0 0 28 26"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M1 20H3.51472C5.37123 20 7.15171 19.2625 8.46447 17.9497L20.9497 5.46446C21.8874 4.52678 23.1592 4 24.4853 4H27M1 4H3.51472C5.37123 4 7.15171 4.7375 8.46447 6.05025L20.9497 18.5355C21.8874 19.4732 23.1592 20 24.4853 20H27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M23 1L27 5L23 9"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M23 17L27 21L23 25"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                </svg>
+
+            </div>
+
+
+            <!-- PREVIOUS -->
+            <div
+                class="cursor-pointer"
+                id="previous"
+                title="Previous"
+            >
+
+                <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M26 7L11.6 14.8C10.8 15.4 10.8 16.6 11.6 17.2L23.6 26.2C24.5889 26.9416 26 26.2361 26 25V7Z"
+                        fill="#94A3B8"
+                    />
+
+                    <path
+                        d="M6 5V27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                </svg>
+
+            </div>
+
+
+            <!-- PLAY / PAUSE -->
+            <div
+                class="cursor-pointer amplitude-play-pause w-24 h-24 rounded-full bg-white border border-play-pause-light-border shadow-xl flex items-center justify-center dark:bg-play-pause-dark-background dark:border-play-pause-dark-border"
+                id="play-pause"
+                title="Play / Pause"
+            >
+
+                <!-- PLAY -->
+                <svg
+                    id="play-icon"
+                    class="ml-[10px]"
+                    width="31"
+                    height="37"
+                    viewBox="0 0 31 37"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M29.6901 16.6608L4.00209 0.747111C2.12875 -0.476923 0.599998 0.421814 0.599998 2.75545V33.643C0.599998 35.9728 2.12747 36.8805 4.00209 35.6514L29.6901 19.7402C29.6901 19.7402 30.6043 19.0973 30.6043 18.2012C30.6043 17.3024 29.6901 16.6608 29.6901 16.6608Z"
+                        class="fill-slate-500 dark:fill-slate-400"
+                    />
+                </svg>
+
+
+                <!-- PAUSE -->
+                <svg
+                    id="pause-icon"
+                    class="hidden"
+                    width="24"
+                    height="36"
+                    viewBox="0 0 24 36"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <rect
+                        width="6"
+                        height="36"
+                        rx="3"
+                        class="fill-slate-500 dark:fill-slate-400"
+                    />
+
+                    <rect
+                        x="18"
+                        width="6"
+                        height="36"
+                        rx="3"
+                        class="fill-slate-500 dark:fill-slate-400"
+                    />
+                </svg>
+
+            </div>
+
+
+            <!-- NEXT -->
+            <div
+                class="cursor-pointer"
+                id="next"
+                title="Next"
+            >
+
+                <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M6 7L20.4 14.8C21.2 15.4 21.2 16.6 20.4 17.2L8.4 26.2C7.41115 26.9416 6 26.2361 6 25V7Z"
+                        fill="#94A3B8"
+                    />
+
+                    <path
+                        d="M26 5V27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                </svg>
+
+            </div>
+
+
+            <!-- REPEAT -->
+            <div
+                class="cursor-pointer"
+                id="repeat"
+                title="Repeat"
+            >
+
+                <svg
+                    width="26"
+                    height="24"
+                    viewBox="0 0 26 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M19.9359 18.7035C17.5929 18.901 15.3081 19 13 19C6 19 2 16 2 10C2 4 6 1 13 1C20 1 24 4 24 10"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                        fill="none"
+                    />
+
+                    <path
+                        d="M17 15L13 19L17 23"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <!-- MENU -->
+            <div
+                class="cursor-pointer"
+                id="menu"
+                title="Menu"
+            >
+
+                <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+
+                    <path
+                        d="M5 16H27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M5 21H27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M5 26H27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+
+                </svg>
+
+            </div>
+
+        </div>
+
+        <!-- glow -->
+        <div class="hidden top-14 w-full absolute ml-auto mr-auto left-0 right-0 text-center max-w-lg h-72 rounded-full bg-highlight blur-2xl dark:block"></div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="flex items-center justify-center mt-10">
+
+        <span class="text-xs text-gray-500">
+            Music Player
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- AUDIO -->
+<audio id="audio">
+    <source src="{{ song.audio.url }}" type="audio/mpeg">
+</audio>
+
+
+<script src="{% static 'music/js/music.js' %}"></script>
+
+</body>
+</html>
+ {% endcomment %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Music Player</title>
+
+    <link rel="stylesheet" href="{% static 'music/css/music.css' %}">
+</head>
+
+<body>
+
+<div class="absolute right-4 top-4">
+    <div id="dark-mode-toggle" class="cursor-pointer">
+
+        <!-- Sun -->
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 stroke-white hidden dark:block"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+        </svg>
+
+        <!-- Moon -->
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 stroke-[#0A1122] block dark:hidden"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            />
+        </svg>
+
+    </div>
+</div>
+
+
+<div class="bg-[#F8FAFC] dark:bg-[#0A1122] w-screen h-screen flex flex-col items-center justify-center">
+
+    <div class="relative w-player flex flex-col rounded-xl shadow-player-light bg-player-light-background border border-player-light-border dark:shadow-player-dark dark:bg-player-dark-background dark:border-player-dark-border dark:backdrop-blur-xl">
+
+        <!-- SONG INFO -->
+        <div class="px-10 pt-10 pb-4 flex items-center z-50">
+
+            <img
+                id="song-cover"
+                src="{{ song.cover.url }}"
+                class="w-24 h-24 rounded-md mr-6 border border-bg-player-light-background dark:border-cover-dark-border"
+                alt="{{ song.title }}"
+            >
+
+            <div class="flex flex-col">
+
+                <span
+                    id="song-name"
+                    class="font-sans text-lg font-medium leading-7 text-slate-900 dark:text-white"
+                >
+                    {{ song.title }}
+                </span>
+
+                <span
+                    id="song-artist"
+                    class="font-sans text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
+                >
+                    {{ song.artist }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+        <div class="w-full flex flex-col px-10 pb-6 z-50">
+
+            <input
+                type="range"
+                id="song-percentage-played"
+                class="amplitude-song-slider mb-3"
+                min="0"
+                max="100"
+                value="0"
+                step="0.1"
+            >
+
+            <div class="flex w-full justify-between">
+
+                <span
+                    id="current-time"
+                    class="amplitude-current-time text-xs font-sans tracking-wide font-medium text-sky-500 dark:text-sky-300"
+                >
+                    0:00
+                </span>
+
+                <span
+                    id="duration"
+                    class="amplitude-duration-time text-xs font-sans tracking-wide font-medium text-gray-500"
+                >
+                    0:00
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+        <div class="h-control-panel px-10 rounded-b-xl bg-control-panel-light-background border-t border-gray-200 flex items-center justify-between z-50 dark:bg-control-panel-dark-background dark:border-gray-900">
+
+            <!-- FAVORITE -->
+            <div
+                class="cursor-pointer"
+                id="song-saved"
+                title="Favorite"
+            >
+                <svg
+                    width="26"
+                    height="24"
+                    viewBox="0 0 26 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M25 7C25 3.68629 22.2018 1 18.75 1C16.1692 1 13.9537 2.5017 13 4.64456C12.0463 2.5017 9.83082 1 7.25 1C3.79822 1 1 3.68629 1 7C1 14.6072 8.49219 20.1822 11.6365 22.187C12.4766 22.7226 13.5234 22.7226 14.3635 22.187C17.5078 20.1822 25 14.6072 25 7Z"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+            </div>
+
+
+            <!-- SHUFFLE -->
+            <div
+                class="cursor-pointer"
+                id="shuffle"
+                title="Shuffle"
+            >
+                <svg
+                    width="28"
+                    height="26"
+                    viewBox="0 0 28 26"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M1 20H3.51472C5.37123 20 7.15171 19.2625 8.46447 17.9497L20.9497 5.46446C21.8874 4.52678 23.1592 4 24.4853 4H27M1 4H3.51472C5.37123 4 7.15171 4.7375 8.46447 6.05025L20.9497 18.5355C21.8874 19.4732 23.1592 20 24.4853 20H27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M23 1L27 5L23 9"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M23 17L27 21L23 25"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                </svg>
+            </div>
+
+
+            <!-- PREVIOUS -->
+            <div
+                class="cursor-pointer"
+                id="previous"
+                title="Previous"
+            >
+                <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M26 7L11.6 14.8C10.8 15.4 10.8 16.6 11.6 17.2L23.6 26.2C24.5889 26.9416 26 26.2361 26 25V7Z"
+                        fill="#94A3B8"
+                    />
+                    <path
+                        d="M6 5V27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                </svg>
+            </div>
+
+
+            <!-- PLAY / PAUSE -->
+            <div
+                id="play-pause"
+                class="cursor-pointer w-24 h-24 rounded-full bg-white border border-play-pause-light-border shadow-xl flex items-center justify-center dark:bg-play-pause-dark-background dark:border-play-pause-dark-border"
+                title="Play / Pause"
+            >
+
+                <!-- PLAY -->
+                <svg
+                    id="play-icon"
+                    class="ml-[10px]"
+                    width="31"
+                    height="37"
+                    viewBox="0 0 31 37"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M29.6901 16.6608L4.00209 0.747111C2.12875 -0.476923 0.599998 0.421814 0.599998 2.75545V33.643C0.599998 35.9728 2.12747 36.8805 4.00209 35.6514L29.6901 19.7402C29.6901 19.7402 30.6043 19.0973 30.6043 18.2012C30.6043 17.3024 29.6901 16.6608 29.6901 16.6608Z"
+                        class="fill-slate-500 dark:fill-slate-400"
+                    />
+                </svg>
+
+
+                <!-- PAUSE -->
+                <svg
+                    id="pause-icon"
+                    class="hidden"
+                    width="24"
+                    height="36"
+                    viewBox="0 0 24 36"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <rect
+                        width="6"
+                        height="36"
+                        rx="3"
+                        class="fill-slate-500 dark:fill-slate-400"
+                    />
+
+                    <rect
+                        x="18"
+                        width="6"
+                        height="36"
+                        rx="3"
+                        class="fill-slate-500 dark:fill-slate-400"
+                    />
+                </svg>
+
+            </div>
+
+
+            <!-- NEXT -->
+            <div
+                class="cursor-pointer"
+                id="next"
+                title="Next"
+            >
+                <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M6 7L20.4 14.8C21.2 15.4 21.2 16.6 20.4 17.2L8.4 26.2C7.41115 26.9416 6 26.2361 6 25V7Z"
+                        fill="#94A3B8"
+                    />
+                    <path
+                        d="M26 5V27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                </svg>
+            </div>
+
+
+            <!-- REPEAT -->
+            <div
+                class="cursor-pointer"
+                id="repeat"
+                title="Repeat"
+            >
+                <svg
+                    width="26"
+                    height="24"
+                    viewBox="0 0 26 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M19.9359 18.7035C17.5929 18.901 15.3081 19 13 19C6 19 2 16 2 10C2 4 6 1 13 1C20 1 24 4 24 10"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                        fill="none"
+                    />
+                    <path
+                        d="M17 15L13 19L17 23"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                </svg>
+            </div>
+
+
+            <!-- MENU -->
+            <div
+                class="cursor-pointer"
+                id="menu"
+                title="Menu"
+            >
+                <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M5 16H27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M5 21H27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M5 26H27"
+                        stroke="#94A3B8"
+                        stroke-width="2"
+                    />
+                </svg>
+            </div>
+
+        </div>
+
+        <!-- GLOW -->
+        <div class="hidden top-14 w-full absolute ml-auto mr-auto left-0 right-0 text-center max-w-lg h-72 rounded-full bg-highlight blur-2xl dark:block"></div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="flex items-center justify-center mt-10">
+        <span class="text-xs text-gray-500">
+            Music Player
+        </span>
+    </div>
+
+</div>
+
+
+<!-- AUDIO -->
+<audio id="audio">
+    <source src="{{ song.audio.url }}" type="audio/mpeg">
+</audio>
+
+
+<script src="{% static 'music/js/music.js' %}"></script>
+
+</body>
+</html>
