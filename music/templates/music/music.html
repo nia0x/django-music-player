@@ -386,32 +386,22 @@
     console.log("SONGS:", songs);
 </script>
 
-<script src="{% static 'music/js/music.js' %}"></script>
-
-
-
-
-
-
-
 
 
 <script>
-    const songs = [
-        {% for item in songs %}
-        {
-            title: "{{ item.title|escapejs }}",
-            artist: "{{ item.artist|escapejs }}",
-            audio: "{{ item.audio.url|escapejs }}",
-            cover: "{{ item.cover.url|escapejs }}"
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    ];
+    const darkModeToggle = document.getElementById("dark-mode-toggle");
 
-    console.log("SONGS:", songs);
+    darkModeToggle.addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+    });
 </script>
 
+
+
+
 <script src="{% static 'music/js/music.js' %}"></script>
+
+
 
 
 </body>
